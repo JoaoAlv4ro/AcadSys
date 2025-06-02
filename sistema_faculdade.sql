@@ -3,21 +3,21 @@ USE sistema_faculdade;
 
 /* Tabela Curso */
 CREATE TABLE Curso (
-    idCurso INT AUTO_INCREMENT PRIMARY KEY,
-    nomeCurso VARCHAR(100) NOT NULL,
+    id_Curso INT AUTO_INCREMENT PRIMARY KEY,
+    nome_Curso VARCHAR(100) NOT NULL,
     carga_horaria INT NOT NULL CHECK (carga_horaria >= 20),
     limite_alunos INT NOT NULL CHECK (limite_alunos >= 1),
-    ativo BOOLEAN NOT NULL DEFAULT TRUE
+    ativo_Curso BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 /* Tabela Aluno */
 CREATE TABLE Aluno (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_Aluno INT AUTO_INCREMENT PRIMARY KEY,
     cpf CHAR(11) NOT NULL UNIQUE,
-    nome VARCHAR(100) NOT NULL,
+    nome_Aluno VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
     data_nascimento DATE NOT NULL,
-    ativo BOOLEAN NOT NULL DEFAULT TRUE,
-    idCurso INT NOT NULL,
-    FOREIGN KEY (idCurso) REFERENCES Curso(idCurso) ON DELETE CASCADE
+    ativo_Aluno BOOLEAN NOT NULL DEFAULT TRUE,
+    id_Curso INT NOT NULL,
+    FOREIGN KEY (id_Curso) REFERENCES Curso(id_Curso) ON DELETE CASCADE
 );
