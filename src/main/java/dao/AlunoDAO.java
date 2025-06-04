@@ -4,6 +4,8 @@ import factory.ConnectionFactory;
 import model.Aluno;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AlunoDAO {
 
@@ -66,7 +68,7 @@ public class AlunoDAO {
 
     // Reabilitar
     public void enableAluno(String cpf) {
-        String sql = "UPDATE Aluno SET ativo = true WHERE cpf = ?";
+        String sql = "UPDATE Aluno SET ativo_Aluno = true WHERE cpf = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -81,7 +83,7 @@ public class AlunoDAO {
 
     // Desabilitar
     public void disableAluno(String cpf) {
-        String sql = "UPDATE Aluno SET ativo = false WHERE cpf = ?";
+        String sql = "UPDATE Aluno SET ativo_Aluno = false WHERE cpf = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -99,7 +101,7 @@ public class AlunoDAO {
         String sql = "SELECT * FROM Aluno WHERE cpf = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, cpfRequisitado);
 
@@ -111,8 +113,8 @@ public class AlunoDAO {
                     aluno.setNome(rs.getString("nome_Aluno"));
                     aluno.setEmail(rs.getString("email"));
                     aluno.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
-                    aluno.setAtivo(rs.getBoolean("ativo"));
-                    aluno.setIdCurso(rs.getInt("idCurso"));
+                    aluno.setAtivo(rs.getBoolean("ativo_Aluno"));
+                    aluno.setIdCurso(rs.getInt("id_Curso"));
                     return aluno;
                 } else {
                     return null;
@@ -125,17 +127,115 @@ public class AlunoDAO {
     }
 
     // Listar apenas ativos
-    // SELECT * FROM Aluno WHERE ativo_Aluno = true
+    public List<Aluno> getAlunosAtivos() {
+        String sql = "SELECT * FROM Aluno WHERE ativo_Aluno = true";
+        List<Aluno> alunos = new ArrayList<>();
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while(rs.next()) {
+                Aluno aluno = new Aluno();
+                aluno.setId(rs.getInt("id_Aluno"));
+                aluno.setCpf(rs.getString("cpf"));
+                aluno.setNome(rs.getString("nome_Aluno"));
+                aluno.setEmail(rs.getString("email"));
+                aluno.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
+                aluno.setAtivo(rs.getBoolean("ativo_Aluno"));
+                aluno.setIdCurso(rs.getInt("id_Curso"));
+                alunos.add(aluno);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao listar Alunos ativos!", e);
+        }
+
+        return alunos;
+    }
+
 
     // Listar apenas Inativos
-    // SELECT * FROM Aluno WHERE ativoAluno = false
+    public List<Aluno> getAlunosInativos() {
+        String sql = "SELECT * FROM Aluno WHERE ativo_Aluno = false";
+        List<Aluno> alunos = new ArrayList<>();
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while(rs.next()) {
+                Aluno aluno = new Aluno();
+                aluno.setId(rs.getInt("id_Aluno"));
+                aluno.setCpf(rs.getString("cpf"));
+                aluno.setNome(rs.getString("nome_Aluno"));
+                aluno.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
+                aluno.setAtivo(rs.getBoolean("ativo_Aluno"));
+                aluno.setIdCurso(rs.getInt("id_Curso"));
+                alunos.add(aluno);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao listar Alunos inativos!", e);
+        }
+
+        return alunos;
+    }
+
 
     // Listar todos
-    // SELECT * FROM Aluno
+    public List<Aluno> getAllAlunos() {
+        String sql = "SELECT * FROM Aluno";
+        List<Aluno> alunos = new ArrayList<>();
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while(rs.next()) {
+                Aluno aluno = new Aluno();
+                aluno.setId(rs.getInt("id_Aluno"));
+                aluno.setCpf(rs.getString("cpf"));
+                aluno.setNome(rs.getString("nome_Aluno"));
+                aluno.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
+                aluno.setAtivo(rs.getBoolean("ativo_Aluno"));
+                aluno.setIdCurso(rs.getInt("id_Curso"));
+                alunos.add(aluno);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao listar Alunos!", e);
+        }
+        return alunos;
+    }
 
     // Listar Aluno por Curso
-    // SELECT * FROM Aluno WHERE id_Curso = ?
-    // Retorna uma list<Aluno>, possui um paramentro pra busca
+    public List<Aluno> getAlunosByCurso(int idCursoRequisitado) {
+        String sql = "SELECT * FROM Aluno WHERE id_Curso = ?";
+        List<Aluno> alunos = new ArrayList<>();
 
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);) {
 
+            stmt.setInt(1, idCursoRequisitado);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                Aluno aluno = new Aluno();
+                aluno.setId(rs.getInt("id_Aluno"));
+                aluno.setId(rs.getInt("id_Aluno"));
+                aluno.setCpf(rs.getString("cpf"));
+                aluno.setNome(rs.getString("nome_Aluno"));
+                aluno.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
+                aluno.setAtivo(rs.getBoolean("ativo_Aluno"));
+                aluno.setIdCurso(rs.getInt("id_Curso"));
+                alunos.add(aluno);
+
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao consultar Alunos por Curso!", e);
+        }
+
+        return alunos;
+    }
 }

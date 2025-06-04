@@ -14,7 +14,7 @@ public class CursoDAO {
 
     // Cadastrar
     public static void createCurso(Curso curso) {
-        String sql = "INSERT INTO Curso(nome_Curso, carga_horaria, limite_alunos, ativo) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Curso(nome_Curso, carga_horaria, limite_alunos, ativo_Curso) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = ConnectionFactory.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -33,7 +33,7 @@ public class CursoDAO {
 
     // Editar
     public void updateCurso(Curso curso) {
-        String sql = "UPDATE Curso SET nome_Curso = ?, carga_horaria = ?, limite_alunos = ?, ativo = ? WHERE idCurso = ?";
+        String sql = "UPDATE Curso SET nome_Curso = ?, carga_horaria = ?, limite_alunos = ?, ativo_Curso = ? WHERE id_Curso = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -68,7 +68,7 @@ public class CursoDAO {
 
     // Desabilitar
     public void disableCurso(int idCurso) {
-        String sql = "UPDATE Curso SET ativo = false WHERE idCurso = ?";
+        String sql = "UPDATE Curso SET ativo_Curso = false WHERE id_Curso = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -83,7 +83,7 @@ public class CursoDAO {
 
     // Reabilitar
     public void enableCurso(int idCurso) {
-        String sql = "UPDATE Curso SET ativo = true WHERE idCurso = ?";
+        String sql = "UPDATE Curso SET ativo_Curso = true WHERE idCurso = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
