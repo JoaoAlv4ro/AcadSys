@@ -14,15 +14,13 @@ public class Curso {
     // Construtor
     public Curso() {}
 
-    public Curso(int idCurso, String nomeCurso, int cargaHoraria, int limiteAlunos, boolean ativo) {
-        this.idCurso = idCurso;
+    public Curso(String nomeCurso, int cargaHoraria, int limiteAlunos, boolean ativo) {
         this.nomeCurso = nomeCurso;
         this.cargaHoraria = cargaHoraria;
         this.limiteAlunos = limiteAlunos;
         this.ativo = ativo;
         this.alunos = new ArrayList<>();
     }
-
 
 
     // Getters e Setters
