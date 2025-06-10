@@ -1,51 +1,74 @@
 package gui;
 
 import dao.CursoDAO;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Curso;
 
 import java.io.IOException;
-import java.util.List;
 
 public class PrincipalController {
     @FXML private TableView<Curso> tabelaCursos;
+    @FXML private TableColumn<Curso, Boolean> colStatus;
     @FXML private TableColumn<Curso, String> colNome;
     @FXML private TableColumn<Curso, Integer> colCargaHoraria;
     @FXML private TableColumn<Curso, Integer> colLimiteAlunos;
-    @FXML private TableColumn<Curso, Boolean> colStatus;
-    @FXML private Button btnEditar;
+
+    @FXML private TextField txtPesquisaCurso;
 
     private ObservableList<Curso> listaCursos;
+    private FilteredList<Curso> listaFiltrada;
 
     @FXML
     public void initialize() {
-        colNome.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getNomeCurso()));
-        colCargaHoraria.setCellValueFactory(data -> new javafx.beans.property.SimpleIntegerProperty(data.getValue().getCargaHoraria()).asObject());
-        colLimiteAlunos.setCellValueFactory(data -> new javafx.beans.property.SimpleIntegerProperty(data.getValue().getLimiteAlunos()).asObject());
-        colStatus.setCellValueFactory(data -> new javafx.beans.property.SimpleBooleanProperty(data.getValue().isAtivo()).asObject());
+        // Configura as colunas
+        colNome.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNomeCurso()));
+        colCargaHoraria.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getCargaHoraria()).asObject());
+        colLimiteAlunos.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getLimiteAlunos()).asObject());
+        colStatus.setCellValueFactory(data -> new SimpleBooleanProperty(data.getValue().isAtivo()).asObject());
 
-        tabelaCursos.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
-            btnEditar.setDisable(newSel == null);
+        // Inicializa e configura o filtro da barra de pesquisa
+        // Isso vai aplicar filtro sempre que o user digitar na pesquisa com addlistener, o que irá alterar a listaFiltrada
+        txtPesquisaCurso.textProperty().addListener((obs, antigo, novo) -> {
+            if (listaFiltrada != null) {
+                listaFiltrada.setPredicate(curso -> {
+                    if (novo == null || novo.isEmpty()) return true;
+                    return curso.getNomeCurso().toLowerCase().contains(novo.toLowerCase());
+                });
+            }
         });
 
         atualizarTabela();
     }
 
     public void atualizarTabela() {
+        // Carrega todos os cursos do banco
         CursoDAO dao = new CursoDAO();
-        List<Curso> cursos = dao.getAllCursos();
-        listaCursos = FXCollections.observableArrayList(cursos);
-        tabelaCursos.setItems(listaCursos);
+        listaCursos = FXCollections.observableArrayList(dao.getAllCursos());
+
+        // Lista Filtrada usando a original
+        listaFiltrada = new FilteredList<>(listaCursos, p -> true);
+
+        // Cria uma lista ordenada para manter a ordenação da tabela
+        SortedList<Curso> listaOrdenada = new SortedList<>(listaFiltrada);
+        listaOrdenada.comparatorProperty().bind(tabelaCursos.comparatorProperty());
+
+        // Define a tabela após a ordenação e o filtro
+        tabelaCursos.setItems(listaOrdenada);
     }
 
     @FXML
@@ -66,33 +89,4 @@ public class PrincipalController {
             e.printStackTrace();
         }
     }
-
-    @FXML
-    public void abrirEditarCurso() {
-        // Pega o curso selecionado da Tabela
-        Curso cursoSelecionado = tabelaCursos.getSelectionModel().getSelectedItem();
-
-
-        if(cursoSelecionado != null) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("EditarCurso.fxml"));
-                Parent root = loader.load();
-
-                // Passa o curso para o controller da tela de edição
-                EditarCursoController controller = loader.getController();
-                controller.setCurso(cursoSelecionado);
-
-                Stage stage = new Stage();
-                stage.setScene(new Scene(root));
-                stage.initModality(Modality.APPLICATION_MODAL);
-                stage.setTitle("Edição de Curso");
-                stage.showAndWait();
-
-                atualizarTabela();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
 }
