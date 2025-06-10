@@ -10,12 +10,10 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Curso;
@@ -40,6 +38,49 @@ public class PrincipalController {
     @FXML
     public void initialize() {
         // Configura as colunas
+        colStatus.setCellFactory(column -> new TableCell<>() {
+            private final Label statusLabel = new Label();
+
+            {
+                statusLabel.setMinSize(16, 16);
+                statusLabel.setMaxSize(16, 16);
+                statusLabel.setStyle("-fx-background-radius: 8; -fx-border-color: #000000; -fx-border-radius: 8;");
+                setAlignment(Pos.CENTER);
+
+                // Ouvinte de clique configurado apenas uma vez
+                statusLabel.setOnMouseClicked(e -> {
+                    Curso curso = getTableView().getItems().get(getIndex());
+
+                    if (curso != null) {
+                        CursoDAO dao = new CursoDAO();
+                        if (curso.isAtivo()) {
+                            dao.disableCurso(curso.getIdCurso());
+                            curso.setAtivo(false);
+                        } else {
+                            dao.enableCurso(curso.getIdCurso());
+                            curso.setAtivo(true);
+                        }
+
+                        aplicarFiltros();
+                    }
+                });
+            }
+
+            @Override
+            protected void updateItem(Boolean ativo, boolean empty) {
+                super.updateItem(ativo, empty);
+
+                if (empty || ativo == null) {
+                    setGraphic(null);
+                } else {
+                    String cor = ativo ? "green" : "red";
+                    statusLabel.setStyle("-fx-background-color: " + cor + "; -fx-background-radius: 8; -fx-border-color: #000000; -fx-border-radius: 8; -fx-cursor: hand;" );
+                    setGraphic(statusLabel);
+                }
+            }
+        });
+
+
         colNome.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNomeCurso()));
         colCargaHoraria.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getCargaHoraria()).asObject());
         colLimiteAlunos.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getLimiteAlunos()).asObject());

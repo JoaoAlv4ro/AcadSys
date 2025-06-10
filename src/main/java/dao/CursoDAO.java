@@ -83,7 +83,7 @@ public class CursoDAO {
 
     // Reabilitar
     public void enableCurso(int idCurso) {
-        String sql = "UPDATE Curso SET ativo_Curso = true WHERE idCurso = ?";
+        String sql = "UPDATE Curso SET ativo_Curso = true WHERE id_Curso = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {

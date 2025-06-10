@@ -14,7 +14,7 @@
     <TextField fx:id="txtCargaHoraria" maxWidth="300" promptText="Carga horária" />
     <TextField fx:id="txtLimiteAlunos" maxWidth="300" promptText="Limite de alunos" />
 
-    <Button onAction="#salvarCurso" text="Salvar" />
+    <Button onAction="#salvarCurso" text="Salvar" style="-fx-cursor: hand;" />
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
    </padding>

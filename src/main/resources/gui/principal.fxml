@@ -16,7 +16,7 @@
         <Region fx:id="espaco" HBox.hgrow="ALWAYS" />
       <HBox spacing="10">
          <children>
-            <Button onAction="#abrirCadastrarCurso" text="Cadastrar Curso" />
+            <Button onAction="#abrirCadastrarCurso" text="Cadastrar Curso" style="-fx-cursor: hand;" />
          </children>
       </HBox>
     </HBox>
