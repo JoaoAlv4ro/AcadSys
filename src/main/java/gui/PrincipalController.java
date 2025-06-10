@@ -14,11 +14,15 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Curso;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class PrincipalController {
     @FXML private TableView<Curso> tabelaCursos;
@@ -26,13 +30,13 @@ public class PrincipalController {
     @FXML private TableColumn<Curso, String> colNome;
     @FXML private TableColumn<Curso, Integer> colCargaHoraria;
     @FXML private TableColumn<Curso, Integer> colLimiteAlunos;
+    @FXML private TableColumn<Curso, Void> colAcoes;
 
     @FXML private TextField txtPesquisaCurso;
 
     @FXML private ChoiceBox<String> choiceFiltroStatus;
 
 
-    private ObservableList<Curso> listaCursos;
     private FilteredList<Curso> listaFiltrada;
 
     @FXML
@@ -73,7 +77,7 @@ public class PrincipalController {
                 if (empty || ativo == null) {
                     setGraphic(null);
                 } else {
-                    String cor = ativo ? "green" : "red";
+                    String cor = ativo ? "#65a30d" : "#dc2626";
                     statusLabel.setStyle("-fx-background-color: " + cor + "; -fx-background-radius: 8; -fx-border-color: #000000; -fx-border-radius: 8; -fx-cursor: hand;" );
                     setGraphic(statusLabel);
                 }
@@ -85,6 +89,79 @@ public class PrincipalController {
         colCargaHoraria.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getCargaHoraria()).asObject());
         colLimiteAlunos.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getLimiteAlunos()).asObject());
         colStatus.setCellValueFactory(data -> new SimpleBooleanProperty(data.getValue().isAtivo()).asObject());
+
+        colAcoes.setCellFactory(column -> new TableCell<Curso, Void>() {
+            private final Button btnEditar = new Button("Editar");
+            private final Button btnExcluir = new Button();
+            private final HBox box = new HBox(5);
+
+            {
+                ImageView editIcon = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/icons/note-pencil.png"))));
+                editIcon.setFitWidth(20);
+                editIcon.setFitHeight(20);
+                btnEditar.setGraphic(editIcon);
+                btnEditar.setStyle("-fx-background-color: #EFECF1; -fx-cursor: hand; -fx-padding: 2;");
+
+                btnEditar.setOnAction(e -> {
+                    Curso curso = getTableView().getItems().get(getIndex());
+
+                    if (curso != null) {
+                        try {
+                            FXMLLoader loader = new FXMLLoader(getClass().getResource("EditarCurso.fxml"));
+                            Parent root = loader.load();
+
+                            EditarCursoController controller = loader.getController();
+                            controller.setCurso(curso);
+
+                            Stage stage = new Stage();
+                            stage.setScene(new Scene(root));
+                            stage.initModality(Modality.APPLICATION_MODAL);
+                            stage.setTitle("Editar Curso");
+                            stage.showAndWait();
+
+                            aplicarFiltros();
+
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
+                });
+
+                // Ícone de exclusão
+                ImageView iconExcluir = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/icons/trash.png"))));
+                iconExcluir.setFitWidth(20);
+                iconExcluir.setFitHeight(20);
+                btnExcluir.setGraphic(iconExcluir);
+                btnExcluir.setStyle("-fx-background-color: #FECACA; -fx-cursor: hand; -fx-padding: 2;");
+
+                // Ação de excluir
+                btnExcluir.setOnAction(e -> {
+                    Curso curso = getTableView().getItems().get(getIndex());
+                    if (curso != null) {
+                        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+                        confirm.setTitle("Confirmar exclusão");
+                        confirm.setHeaderText("Deseja realmente excluir este curso?");
+                        confirm.setContentText("Curso: " + curso.getNomeCurso());
+
+                        confirm.showAndWait().ifPresent(resposta -> {
+                            if (resposta == ButtonType.OK) {
+                                new CursoDAO().deleteCurso(curso.getIdCurso());
+                                atualizarTabela();
+                            }
+                        });
+                    }
+                });
+
+                box.getChildren().addAll(btnEditar, btnExcluir);
+                box.setAlignment(Pos.CENTER);
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : box);
+            }
+        });
 
         choiceFiltroStatus.getItems().addAll("Todos", "Ativos", "Inativos");
         choiceFiltroStatus.setValue("Todos");
@@ -99,7 +176,7 @@ public class PrincipalController {
     public void atualizarTabela() {
         // Carrega todos os cursos do banco e armazena numa observableList
         CursoDAO dao = new CursoDAO();
-        listaCursos = FXCollections.observableArrayList(dao.getAllCursos());
+        ObservableList<Curso> listaCursos = FXCollections.observableArrayList(dao.getAllCursos());
 
         // Lista Filtrada usando a original
         listaFiltrada = new FilteredList<>(listaCursos, p -> true);

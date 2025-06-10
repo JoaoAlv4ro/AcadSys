@@ -3,6 +3,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <VBox prefHeight="511.0" prefWidth="758.0" spacing="10.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.PrincipalController">
 
@@ -16,17 +17,21 @@
         <Region fx:id="espaco" HBox.hgrow="ALWAYS" />
       <HBox spacing="10">
          <children>
-            <Button onAction="#abrirCadastrarCurso" text="Cadastrar Curso" style="-fx-cursor: hand;" />
+            <Button onAction="#abrirCadastrarCurso" style="-fx-cursor: hand;" text="Cadastrar Curso" />
          </children>
       </HBox>
     </HBox>
 
-    <Label style="-fx-font-size: 16px;" text="Cursos Cadastrados" />
+    <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Cursos Cadastrados">
+      <font>
+         <Font name="Arial" size="16.0" />
+      </font>
+    </Label>
 
     <TableView fx:id="tabelaCursos">
         <columns>
             <TableColumn fx:id="colStatus" text="Status" />
-            <TableColumn fx:id="colNome" prefWidth="200" text="Nome do Curso" />
+            <TableColumn fx:id="colNome" prefWidth="200" style="-fx-font-weight: bold;" text="Nome do Curso" />
             <TableColumn fx:id="colCargaHoraria" text="Carga Horária" />
             <TableColumn fx:id="colLimiteAlunos" text="Limite" />
             <TableColumn fx:id="colAcoes" text="Ações" />
