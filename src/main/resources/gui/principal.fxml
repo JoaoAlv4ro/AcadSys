@@ -4,12 +4,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="10.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.PrincipalController">
+<VBox prefHeight="511.0" prefWidth="758.0" spacing="10.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.PrincipalController">
 
     <HBox spacing="10">
       <HBox spacing="10">
          <children>
             <TextField fx:id="txtPesquisaCurso" prefWidth="300" promptText="Digite o nome do curso" />
+             <ChoiceBox fx:id="choiceFiltroStatus" prefWidth="120" />
          </children>
       </HBox>
         <Region fx:id="espaco" HBox.hgrow="ALWAYS" />

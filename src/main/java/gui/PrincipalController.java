@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -30,6 +31,9 @@ public class PrincipalController {
 
     @FXML private TextField txtPesquisaCurso;
 
+    @FXML private ChoiceBox<String> choiceFiltroStatus;
+
+
     private ObservableList<Curso> listaCursos;
     private FilteredList<Curso> listaFiltrada;
 
@@ -41,22 +45,18 @@ public class PrincipalController {
         colLimiteAlunos.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getLimiteAlunos()).asObject());
         colStatus.setCellValueFactory(data -> new SimpleBooleanProperty(data.getValue().isAtivo()).asObject());
 
-        // Inicializa e configura o filtro da barra de pesquisa
-        // Isso vai aplicar filtro sempre que o user digitar na pesquisa com addlistener, o que irá alterar a listaFiltrada
-        txtPesquisaCurso.textProperty().addListener((obs, antigo, novo) -> {
-            if (listaFiltrada != null) {
-                listaFiltrada.setPredicate(curso -> {
-                    if (novo == null || novo.isEmpty()) return true;
-                    return curso.getNomeCurso().toLowerCase().contains(novo.toLowerCase());
-                });
-            }
-        });
+        choiceFiltroStatus.getItems().addAll("Todos", "Ativos", "Inativos");
+        choiceFiltroStatus.setValue("Todos");
+
+        // Listener que observam/checam sempre alterações de filtro em pesquisa e mudança de filtro por status na choicebox.
+        choiceFiltroStatus.getSelectionModel().selectedItemProperty().addListener((obs, antigo, novo) -> aplicarFiltros());
+        txtPesquisaCurso.textProperty().addListener((obs, antigo, novo) -> aplicarFiltros());
 
         atualizarTabela();
     }
 
     public void atualizarTabela() {
-        // Carrega todos os cursos do banco
+        // Carrega todos os cursos do banco e armazena numa observableList
         CursoDAO dao = new CursoDAO();
         listaCursos = FXCollections.observableArrayList(dao.getAllCursos());
 
@@ -67,7 +67,7 @@ public class PrincipalController {
         SortedList<Curso> listaOrdenada = new SortedList<>(listaFiltrada);
         listaOrdenada.comparatorProperty().bind(tabelaCursos.comparatorProperty());
 
-        // Define a tabela após a ordenação e o filtro
+        // Define a tabela após a ordenação e os filtros do listener
         tabelaCursos.setItems(listaOrdenada);
     }
 
@@ -88,5 +88,24 @@ public class PrincipalController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void aplicarFiltros() {
+        // Obter valor dos componentes
+        String textoPesquisa = txtPesquisaCurso.getText().toLowerCase();
+        String statusSelecionado = choiceFiltroStatus.getValue();
+
+        // Setagem de filtros
+        listaFiltrada.setPredicate(curso -> {
+            boolean filtroPesquisa = curso.getNomeCurso().toLowerCase().contains(textoPesquisa);
+
+            boolean filtroStatus = switch (statusSelecionado) {
+                case "Ativos" -> curso.isAtivo();
+                case "Inativos" -> !curso.isAtivo();
+                default -> true; // "Todos"
+            };
+
+            return filtroPesquisa && filtroStatus;
+        });
     }
 }
