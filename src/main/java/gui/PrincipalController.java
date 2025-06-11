@@ -93,6 +93,7 @@ public class PrincipalController {
         colAcoes.setCellFactory(column -> new TableCell<Curso, Void>() {
             private final Button btnEditar = new Button("Editar");
             private final Button btnExcluir = new Button();
+            private final Button btnVisualizar = new Button("Visualizar");
             private final HBox box = new HBox(5);
 
             {
@@ -152,7 +153,36 @@ public class PrincipalController {
                     }
                 });
 
-                box.getChildren().addAll(btnEditar, btnExcluir);
+                // Ícone visualizar
+                ImageView iconVisualizar = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/icons/eye.png"))));
+                iconVisualizar.setFitWidth(20);
+                iconVisualizar.setFitHeight(20);
+                btnVisualizar.setGraphic(iconVisualizar);
+                btnVisualizar.setStyle("-fx-background-color: #bae6fd; -fx-cursor: hand; -fx-padding: 2;");
+
+                btnVisualizar.setOnAction(e -> {
+                    Curso curso = getTableView().getItems().get(getIndex());
+                    if (curso != null) {
+                        try {
+                            FXMLLoader loader = new FXMLLoader(getClass().getResource("TelaAlunos.fxml"));
+                            Parent root = loader.load();
+
+                            AlunosController controller = loader.getController();
+                            controller.setCurso(curso); // Envia o curso
+
+                            Stage stage = new Stage();
+                            stage.setScene(new Scene(root));
+                            stage.setTitle("Alunos do Curso: " + curso.getNomeCurso());
+                            stage.initModality(Modality.APPLICATION_MODAL);
+                            stage.show();
+
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+
+                box.getChildren().addAll(btnVisualizar, btnEditar, btnExcluir);
                 box.setAlignment(Pos.CENTER);
             }
 

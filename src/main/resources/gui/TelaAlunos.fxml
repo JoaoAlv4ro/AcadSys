@@ -10,33 +10,33 @@
     <HBox spacing="20">
         <VBox spacing="5">
             <Label text="Nome:" />
-            <Label fx:id="lblNomeCurso" />
+            <Label fx:id="lblNomeCurso" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
         </VBox>
         <VBox spacing="5">
             <Label text="Carga horária:" />
-            <Label fx:id="lblCargaHoraria" />
+            <Label fx:id="lblCargaHoraria" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
         </VBox>
         <VBox spacing="5">
             <Label text="Limite de alunos:" />
-            <Label fx:id="lblLimiteAlunos" />
+            <Label fx:id="lblLimiteAlunos" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
         </VBox>
         <VBox spacing="5">
             <Label text="Status:" />
-            <Label fx:id="lblStatusCurso" />
+            <Label fx:id="lblStatusCurso" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
         </VBox>
     </HBox>
 
     <HBox spacing="10">
       <HBox spacing="10">
          <children>
-            <TextField fx:id="txtPesquisaAluno" prefWidth="300" promptText="Digite o nome do curso" />
+            <TextField fx:id="txtPesquisaAluno" prefWidth="300" promptText="Digite o nome do Aluno" />
              <ChoiceBox fx:id="choiceFiltroStatus" prefWidth="120" />
          </children>
       </HBox>
         <Region fx:id="espaco" HBox.hgrow="ALWAYS" />
       <HBox spacing="10">
          <children>
-            <Button onAction="#abrirCadastrarAluno" style="-fx-cursor: hand;" text="Cadastrar Curso" />
+            <Button onAction="#abrirCadastrarAluno" style="-fx-cursor: hand;" text="Cadastrar Aluno" />
          </children>
       </HBox>
     </HBox>
@@ -50,9 +50,9 @@
     <TableView fx:id="tabelaAlunos">
         <columns>
             <TableColumn fx:id="colStatus" text="Status" />
-            <TableColumn fx:id="colNome" text="Nome" prefWidth="200"/>
-            <TableColumn fx:id="colCpf" text="CPF" />
-            <TableColumn fx:id="colEmail" text="Email" />
+            <TableColumn fx:id="colNome" text="Nome" prefWidth="200" style="-fx-font-weight: bold;" />
+            <TableColumn fx:id="colCpf" text="CPF" prefWidth="100" />
+            <TableColumn fx:id="colEmail" text="Email" prefWidth="200" />
             <TableColumn fx:id="colNascimento" text="Nascimento" />
             <TableColumn fx:id="colAcoes" text="Ações" />
         </columns>

@@ -215,23 +215,23 @@ public class AlunoDAO {
         List<Aluno> alunos = new ArrayList<>();
 
         try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, idCursoRequisitado);
 
             try (ResultSet rs = stmt.executeQuery()) {
-                Aluno aluno = new Aluno();
-                aluno.setId(rs.getInt("id_Aluno"));
-                aluno.setId(rs.getInt("id_Aluno"));
-                aluno.setCpf(rs.getString("cpf"));
-                aluno.setNome(rs.getString("nome_Aluno"));
-                aluno.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
-                aluno.setAtivo(rs.getBoolean("ativo_Aluno"));
-                aluno.setIdCurso(rs.getInt("id_Curso"));
-                alunos.add(aluno);
-
+                while (rs.next()) {
+                    Aluno aluno = new Aluno();
+                    aluno.setId(rs.getInt("id_Aluno"));
+                    aluno.setCpf(rs.getString("cpf"));
+                    aluno.setNome(rs.getString("nome_Aluno"));
+                    aluno.setEmail(rs.getString("email"));
+                    aluno.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
+                    aluno.setAtivo(rs.getBoolean("ativo_Aluno"));
+                    aluno.setIdCurso(rs.getInt("id_Curso"));
+                    alunos.add(aluno);
+                }
             }
-
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao consultar Alunos por Curso!", e);
         }
