@@ -15,6 +15,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Aluno;
@@ -41,6 +42,9 @@ public class AlunosController {
     @FXML private TableColumn<Aluno, String> colEmail;
     @FXML private TableColumn<Aluno, String> colNascimento;
     @FXML private TableColumn<Aluno, Void> colAcoes;
+    @FXML private Button btnCadastrarAluno;
+    @FXML private Button btnExportar;
+
 
     private Curso curso;
     private ObservableList<Aluno> listaAlunos;
@@ -187,6 +191,18 @@ public class AlunosController {
             }
         });
 
+        ImageView iconExportar = new ImageView(new Image(getClass().getResourceAsStream("/icons/download-simple.png")));
+        iconExportar.setFitWidth(20);
+        iconExportar.setFitHeight(20);
+
+        btnExportar.setGraphic(iconExportar);
+
+        ImageView iconMaisCurso = new ImageView(new Image(getClass().getResourceAsStream("/icons/plus.png")));
+        iconMaisCurso.setFitWidth(16);
+        iconMaisCurso.setFitHeight(16);
+
+        btnCadastrarAluno.setGraphic(iconMaisCurso);
+        btnCadastrarAluno.setContentDisplay(ContentDisplay.LEFT);
     }
 
     private void aplicarFiltro() {
@@ -240,6 +256,62 @@ public class AlunosController {
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void exportarDados() {
+        if (curso == null || listaFiltrada == null) return;
+
+        // Monta o conteúdo do arquivo
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("=== Dados do Curso ===\n");
+        sb.append("Nome: ").append(curso.getNomeCurso()).append("\n");
+        sb.append("Carga Horária: ").append(curso.getCargaHoraria()).append("h\n");
+        sb.append("Limite de Alunos: ").append(curso.getLimiteAlunos()).append("\n");
+        sb.append("Status: ").append(curso.isAtivo() ? "Ativo" : "Inativo").append("\n\n");
+
+        sb.append("=== Alunos (" + (choiceFiltroStatus.getValue()) + ") ===\n");
+
+        if (listaFiltrada.isEmpty()) {
+            sb.append("Nenhum aluno correspondente ao filtro.\n");
+        } else {
+            for (Aluno aluno : listaFiltrada) {
+                sb.append("Nome: ").append(aluno.getNome()).append("\n");
+                sb.append("CPF: ").append(aluno.getCpf()).append("\n");
+                sb.append("Email: ").append(aluno.getEmail()).append("\n");
+                sb.append("Nascimento: ").append(aluno.getDataNascimento()).append("\n");
+                sb.append("Status: ").append(aluno.isAtivo() ? "Ativo" : "Inativo").append("\n");
+                sb.append("-------------------------------\n");
+            }
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Salvar arquivo");
+        fileChooser.setInitialFileName("Alunos_" + curso.getNomeCurso() + "_" + choiceFiltroStatus.getValue() + ".txt");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Arquivos de texto", "*.txt"));
+
+        Stage stage = (Stage) tabelaAlunos.getScene().getWindow();
+        java.io.File file = fileChooser.showSaveDialog(stage);
+
+        if (file != null) {
+            try {
+                java.nio.file.Files.writeString(file.toPath(), sb.toString());
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Exportação Concluída");
+                alert.setHeaderText(null);
+                alert.setContentText("Arquivo exportado com sucesso:\n" + file.getAbsolutePath());
+                alert.showAndWait();
+
+            } catch (IOException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Erro na Exportação");
+                alert.setHeaderText("Não foi possível salvar o arquivo.");
+                alert.setContentText(e.getMessage());
+                alert.showAndWait();
+            }
         }
     }
 }

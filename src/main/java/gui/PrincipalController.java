@@ -36,6 +36,7 @@ public class PrincipalController {
 
     @FXML private ChoiceBox<String> choiceFiltroStatus;
 
+    @FXML private Button btnCadastrarCurso;
 
     private FilteredList<Curso> listaFiltrada;
 
@@ -199,6 +200,13 @@ public class PrincipalController {
         // Listener que observam/checam sempre alterações de filtro em pesquisa e mudança de filtro por status na choicebox.
         choiceFiltroStatus.getSelectionModel().selectedItemProperty().addListener((obs, antigo, novo) -> aplicarFiltros());
         txtPesquisaCurso.textProperty().addListener((obs, antigo, novo) -> aplicarFiltros());
+
+        ImageView iconMaisCurso = new ImageView(new Image(getClass().getResourceAsStream("/icons/plus.png")));
+        iconMaisCurso.setFitWidth(16);
+        iconMaisCurso.setFitHeight(16);
+
+        btnCadastrarCurso.setGraphic(iconMaisCurso);
+        btnCadastrarCurso.setContentDisplay(ContentDisplay.LEFT);
 
         atualizarTabela();
     }

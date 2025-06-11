@@ -29,14 +29,15 @@
     <HBox spacing="10">
       <HBox spacing="10">
          <children>
-            <TextField fx:id="txtPesquisaAluno" prefWidth="300" promptText="Digite o nome do Aluno" />
+             <TextField fx:id="txtPesquisaAluno" prefWidth="300" promptText="Digite o nome do Aluno" />
              <ChoiceBox fx:id="choiceFiltroStatus" prefWidth="120" />
          </children>
       </HBox>
         <Region fx:id="espaco" HBox.hgrow="ALWAYS" />
       <HBox spacing="10">
          <children>
-            <Button onAction="#abrirCadastrarAluno" style="-fx-cursor: hand;" text="Cadastrar Aluno" />
+             <Button fx:id="btnCadastrarAluno" onAction="#abrirCadastrarAluno" style="-fx-cursor: hand; -fx-background-color: #3b82f6; -fx-font-weight: bold; -fx-text-fill: white;" text="Cadastrar Aluno" />
+             <Button fx:id="btnExportar" text="" style="-fx-cursor: hand; -fx-padding: 2;" onAction="#exportarDados" />
          </children>
       </HBox>
     </HBox>
@@ -50,7 +51,7 @@
     <TableView fx:id="tabelaAlunos">
         <columns>
             <TableColumn fx:id="colStatus" text="Status" />
-            <TableColumn fx:id="colNome" text="Nome" prefWidth="200" style="-fx-font-weight: bold;" />
+            <TableColumn fx:id="colNome" text="Nome" prefWidth="210" style="-fx-font-weight: bold;" />
             <TableColumn fx:id="colCpf" text="CPF" prefWidth="100" />
             <TableColumn fx:id="colEmail" text="Email" prefWidth="200" />
             <TableColumn fx:id="colNascimento" text="Nascimento" />

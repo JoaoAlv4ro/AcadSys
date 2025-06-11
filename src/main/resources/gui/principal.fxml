@@ -17,7 +17,7 @@
         <Region fx:id="espaco" HBox.hgrow="ALWAYS" />
       <HBox spacing="10">
          <children>
-            <Button onAction="#abrirCadastrarCurso" style="-fx-cursor: hand;" text="Cadastrar Curso" />
+            <Button fx:id="btnCadastrarCurso" onAction="#abrirCadastrarCurso" style="-fx-cursor: hand; -fx-background-color: #3b82f6; -fx-font-weight: bold; -fx-text-fill: white;" text="Cadastrar Curso" />
          </children>
       </HBox>
     </HBox>
@@ -31,8 +31,8 @@
     <TableView fx:id="tabelaCursos">
         <columns>
             <TableColumn fx:id="colStatus" text="Status" />
-            <TableColumn fx:id="colNome" prefWidth="200" style="-fx-font-weight: bold;" text="Nome do Curso" />
-            <TableColumn fx:id="colCargaHoraria" text="Carga Horária" />
+            <TableColumn fx:id="colNome" prefWidth="365" style="-fx-font-weight: bold;" text="Nome do Curso" />
+            <TableColumn fx:id="colCargaHoraria" prefWidth="100" text="Carga Horária" />
             <TableColumn fx:id="colLimiteAlunos" text="Limite" />
             <TableColumn fx:id="colAcoes" text="Ações" />
         </columns>
