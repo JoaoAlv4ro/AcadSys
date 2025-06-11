@@ -1,6 +1,7 @@
 package gui;
 
 import dao.CursoDAO;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -37,6 +38,9 @@ public class PrincipalController {
     @FXML private ChoiceBox<String> choiceFiltroStatus;
 
     @FXML private Button btnCadastrarCurso;
+
+    @FXML private Label lblTotalCursos;
+
 
     private FilteredList<Curso> listaFiltrada;
 
@@ -210,6 +214,7 @@ public class PrincipalController {
         btnCadastrarCurso.setContentDisplay(ContentDisplay.LEFT);
 
         atualizarTabela();
+        aplicarFiltros();
     }
 
     public void atualizarTabela() {
@@ -251,6 +256,10 @@ public class PrincipalController {
         // Obter valor dos componentes
         String textoPesquisa = txtPesquisaCurso.getText().toLowerCase();
         String statusSelecionado = choiceFiltroStatus.getValue();
+
+        Platform.runLater(() -> {
+            lblTotalCursos.setText("Total de cadastros: " + listaFiltrada.size());
+        });
 
         // Setagem de filtros
         listaFiltrada.setPredicate(curso -> {

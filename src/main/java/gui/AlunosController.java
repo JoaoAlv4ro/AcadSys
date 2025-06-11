@@ -1,6 +1,7 @@
 package gui;
 
 import dao.AlunoDAO;
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,7 +15,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -44,7 +44,7 @@ public class AlunosController {
     @FXML private TableColumn<Aluno, Void> colAcoes;
     @FXML private Button btnCadastrarAluno;
     @FXML private Button btnExportar;
-
+    @FXML private Label lblTotalAlunos;
 
     private Curso curso;
     private ObservableList<Aluno> listaAlunos;
@@ -83,8 +83,8 @@ public class AlunosController {
         choiceFiltroStatus.setValue("Todos");
 
         // Listeners de filtros
-        txtPesquisaAluno.textProperty().addListener((obs, old, novo) -> aplicarFiltro());
-        choiceFiltroStatus.getSelectionModel().selectedItemProperty().addListener((obs, old, novo) -> aplicarFiltro());
+        txtPesquisaAluno.textProperty().addListener((obs, old, novo) -> aplicarFiltros());
+        choiceFiltroStatus.getSelectionModel().selectedItemProperty().addListener((obs, old, novo) -> aplicarFiltros());
 
         colStatus.setCellFactory(column -> new TableCell<>() {
             private final Label statusLabel = new Label();
@@ -164,7 +164,7 @@ public class AlunosController {
                             stage.showAndWait();
 
                             atualizarTabela();
-                            aplicarFiltro();
+                            aplicarFiltros();
                         } catch (IOException ex) {
                             ex.printStackTrace();
                         }
@@ -218,13 +218,20 @@ public class AlunosController {
 
         btnCadastrarAluno.setGraphic(iconMaisCurso);
         btnCadastrarAluno.setContentDisplay(ContentDisplay.LEFT);
+
+        atualizarTabela();
+        aplicarFiltros();
     }
 
-    private void aplicarFiltro() {
+    private void aplicarFiltros() {
         if (listaFiltrada == null) return;
 
         String texto = txtPesquisaAluno.getText().toLowerCase();
         String status = choiceFiltroStatus.getValue();
+
+        Platform.runLater(() -> {
+            lblTotalAlunos.setText("Total de cadastros: " + listaFiltrada.size());
+        });
 
         listaFiltrada.setPredicate(aluno -> {
             boolean correspondeTexto = aluno.getNome().toLowerCase().contains(texto);
@@ -250,6 +257,10 @@ public class AlunosController {
         listaOrdenada.comparatorProperty().bind(tabelaAlunos.comparatorProperty());
 
         tabelaAlunos.setItems(listaOrdenada);
+
+        Platform.runLater(() -> {
+            lblTotalAlunos.setText("Total de cadastros: " + listaFiltrada.size());
+        });
     }
 
     @FXML
