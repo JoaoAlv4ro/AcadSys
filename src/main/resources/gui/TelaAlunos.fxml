@@ -22,7 +22,7 @@
         </VBox>
         <VBox spacing="5">
             <Label text="Status:" />
-            <Label fx:id="lblStatusCurso" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+            <HBox fx:id="boxStatusCurso" spacing="5" alignment="CENTER_LEFT" />
         </VBox>
     </HBox>
 
@@ -42,11 +42,26 @@
       </HBox>
     </HBox>
 
-    <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Alunos Cadastrados">
-      <font>
-         <Font name="Arial" size="16.0" />
-      </font>
-    </Label>
+    <HBox>
+        <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Alunos Cadastrados">
+            <font>
+                <Font name="Arial" size="16.0" />
+            </font>
+        </Label>
+        <Region fx:id="espaco" HBox.hgrow="ALWAYS" />
+        <HBox spacing="15" alignment="CENTER_LEFT">
+            <children>
+                <HBox spacing="5" alignment="CENTER_LEFT">
+                    <Label style="-fx-min-width: 12; -fx-min-height: 12; -fx-max-width: 12; -fx-max-height: 12; -fx-background-color: #65a30d; -fx-background-radius: 8; -fx-border-radius: 8;" />
+                    <Label text="Ativo" />
+                </HBox>
+                <HBox spacing="5" alignment="CENTER_LEFT">
+                    <Label style="-fx-min-width: 12; -fx-min-height: 12; -fx-max-width: 12; -fx-max-height: 12; -fx-background-color: #dc2626; -fx-background-radius: 2; -fx-border-radius: 2;" />
+                    <Label text="Inativo" />
+                </HBox>
+            </children>
+        </HBox>
+    </HBox>
 
     <TableView fx:id="tabelaAlunos">
         <columns>

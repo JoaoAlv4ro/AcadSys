@@ -49,7 +49,7 @@ public class PrincipalController {
             {
                 statusLabel.setMinSize(16, 16);
                 statusLabel.setMaxSize(16, 16);
-                statusLabel.setStyle("-fx-background-radius: 8; -fx-border-color: #000000; -fx-border-radius: 8;");
+                statusLabel.setStyle("-fx-background-radius: 8;");
                 setAlignment(Pos.CENTER);
 
                 // Ouvinte de clique configurado apenas uma vez
@@ -79,7 +79,8 @@ public class PrincipalController {
                     setGraphic(null);
                 } else {
                     String cor = ativo ? "#65a30d" : "#dc2626";
-                    statusLabel.setStyle("-fx-background-color: " + cor + "; -fx-background-radius: 8; -fx-border-color: #000000; -fx-border-radius: 8; -fx-cursor: hand;" );
+                    String borda = ativo ? "8" : "2";
+                    statusLabel.setStyle("-fx-background-color: " + cor + "; -fx-background-radius: " + borda + "; -fx-border-radius: " + borda + "; -fx-cursor: hand;" );
                     setGraphic(statusLabel);
                 }
             }

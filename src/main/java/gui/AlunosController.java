@@ -31,7 +31,7 @@ public class AlunosController {
     @FXML private Label lblNomeCurso;
     @FXML private Label lblCargaHoraria;
     @FXML private Label lblLimiteAlunos;
-    @FXML private Label lblStatusCurso;
+    @FXML private HBox boxStatusCurso;
 
     @FXML private TextField txtPesquisaAluno;
     @FXML private ChoiceBox<String> choiceFiltroStatus;
@@ -57,7 +57,21 @@ public class AlunosController {
         lblNomeCurso.setText(curso.getNomeCurso());
         lblCargaHoraria.setText(String.valueOf(curso.getCargaHoraria()));
         lblLimiteAlunos.setText(String.valueOf(curso.getLimiteAlunos()));
-        lblStatusCurso.setText(curso.isAtivo() ? "Ativo" : "Inativo");
+        boxStatusCurso.getChildren().clear();
+
+        Label bolinha = new Label();
+        bolinha.setMinSize(16, 16);
+        bolinha.setMaxSize(16, 16);
+        bolinha.setStyle(
+                "-fx-background-color: " + (curso.isAtivo() ? "#65a30d" : "#dc2626") + ";" +
+                        "-fx-background-radius: " + (curso.isAtivo() ? "8" : "2") + ";" +
+                        "-fx-border-radius: " + (curso.isAtivo() ? "8" : "2") + ";"
+        );
+
+        Label texto = new Label(curso.isAtivo() ? "Ativo" : "Inativo");
+
+        boxStatusCurso.getChildren().addAll(bolinha, texto);
+        boxStatusCurso.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
         atualizarTabela();
     }
@@ -78,7 +92,7 @@ public class AlunosController {
             {
                 statusLabel.setMinSize(16, 16);
                 statusLabel.setMaxSize(16, 16);
-                statusLabel.setStyle("-fx-background-radius: 8; -fx-border-color: #ccc; -fx-border-radius: 8;");
+                statusLabel.setStyle("-fx-background-radius: 8;");
                 setAlignment(Pos.CENTER);
 
                 statusLabel.setOnMouseClicked(e -> {
@@ -104,7 +118,8 @@ public class AlunosController {
                     setGraphic(null);
                 } else {
                     String cor = ativo ? "#65a30d" : "#dc2626";
-                    statusLabel.setStyle("-fx-background-color: " + cor + "; -fx-background-radius: 8; -fx-border-color: #000000; -fx-border-radius: 8; -fx-cursor: hand;" );
+                    String borda = ativo ? "8" : "2";
+                    statusLabel.setStyle("-fx-background-color: " + cor + "; -fx-background-radius: " + borda + "; -fx-border-radius: " + borda + "; -fx-cursor: hand;" );
                     setGraphic(statusLabel);
                 }
             }
