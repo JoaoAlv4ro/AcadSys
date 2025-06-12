@@ -238,4 +238,23 @@ public class AlunoDAO {
 
         return alunos;
     }
+
+    // Verificar se o cpf já foi cadastrado
+    public boolean cpfExistente(String cpf) {
+        String sql = "SELECT COUNT(*) FROM Aluno WHERE cpf = ?";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, cpf);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao verificar CPF", e);
+        }
+        return false;
+    }
 }

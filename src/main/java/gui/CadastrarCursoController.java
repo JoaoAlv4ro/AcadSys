@@ -14,6 +14,9 @@ public class CadastrarCursoController {
 
     @FXML
     public void salvarCurso() {
+        if (!validarCurso()) {
+            return;
+        }
         try {
             String nome = txtNome.getText().trim();
             int carga = Integer.parseInt(txtCargaHoraria.getText().trim());
@@ -42,5 +45,52 @@ public class CadastrarCursoController {
             alert.setContentText(e.getMessage());
             alert.show();
         }
+    }
+
+    private boolean validarCurso() {
+        if (txtNome.getText().isEmpty() || txtCargaHoraria.getText().isEmpty() || txtLimiteAlunos.getText().isEmpty()) {
+            mostrarAlerta("Campos obrigatórios", "Preencha todos os campos.");
+            return false;
+        }
+
+        // Valida Nome (mínimo 3 caracteres)
+        if (txtNome.getText().trim().length() < 3) {
+            mostrarAlerta("Nome inválido", "O nome do curso deve ter no mínimo 3 caracteres");
+            return false;
+        }
+
+        // Valida Carga Horária (mínimo 20 horas)
+        try {
+            int carga = Integer.parseInt(txtCargaHoraria.getText().trim());
+            if (carga < 20) {
+                mostrarAlerta("Carga horária inválida", "A carga horária mínima é 20 horas");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            mostrarAlerta("Formato inválido", "A carga horária deve ser um número inteiro");
+            return false;
+        }
+
+        // Valida Limite de Alunos (mínimo 1)
+        try {
+            int limite = Integer.parseInt(txtLimiteAlunos.getText().trim());
+            if (limite < 1) {
+                mostrarAlerta("Limite inválido", "O limite de alunos deve ser no mínimo 1");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            mostrarAlerta("Formato inválido", "O limite de alunos deve ser um número inteiro");
+            return false;
+        }
+
+        return true;
+    }
+
+    private void mostrarAlerta(String titulo, String mensagem) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensagem);
+        alert.showAndWait();
     }
 }

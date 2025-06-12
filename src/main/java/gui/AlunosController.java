@@ -265,6 +265,10 @@ public class AlunosController {
 
     @FXML
     public void abrirCadastrarAluno() {
+        if (!curso.isAtivo()) {
+            mostrarAlerta("Curso Inativo", "Não é possível adicionar alunos a cursos inativos");
+            return;
+        }
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("CadastrarAluno.fxml"));
             Parent root = loader.load();
@@ -339,5 +343,13 @@ public class AlunosController {
                 alert.showAndWait();
             }
         }
+    }
+
+    private void mostrarAlerta(String titulo, String mensagem) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensagem);
+        alert.showAndWait();
     }
 }

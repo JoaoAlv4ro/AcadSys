@@ -154,6 +154,7 @@ public class PrincipalController {
                             if (resposta == ButtonType.OK) {
                                 new CursoDAO().deleteCurso(curso.getIdCurso());
                                 atualizarTabela();
+                                aplicarFiltros();
                             }
                         });
                     }
@@ -247,6 +248,8 @@ public class PrincipalController {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle(titulo);
             stage.showAndWait();
+
+            aplicarFiltros();
         } catch (IOException e) {
             e.printStackTrace();
         }
