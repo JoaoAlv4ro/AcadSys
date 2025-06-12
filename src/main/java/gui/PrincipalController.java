@@ -103,34 +103,37 @@ public class PrincipalController {
             private final HBox box = new HBox(5);
 
             {
+                // Ícone de edição
                 ImageView editIcon = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/icons/note-pencil.png"))));
                 editIcon.setFitWidth(20);
                 editIcon.setFitHeight(20);
                 btnEditar.setGraphic(editIcon);
                 btnEditar.setStyle("-fx-background-color: #EFECF1; -fx-cursor: hand; -fx-padding: 2;");
 
+                // Ação de edição
                 btnEditar.setOnAction(e -> {
                     Curso curso = getTableView().getItems().get(getIndex());
+                    if (!curso.isAtivo()) {
+                        mostrarAlerta("Curso Inativo", "Não é possível editar cursos inativos! Caso precise editar algo do curso ative nos Status!");
+                        return;
+                    }
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("EditarCurso.fxml"));
+                        Parent root = loader.load();
 
-                    if (curso != null) {
-                        try {
-                            FXMLLoader loader = new FXMLLoader(getClass().getResource("EditarCurso.fxml"));
-                            Parent root = loader.load();
+                        EditarCursoController controller = loader.getController();
+                        controller.setCurso(curso);
 
-                            EditarCursoController controller = loader.getController();
-                            controller.setCurso(curso);
+                        Stage stage = new Stage();
+                        stage.setScene(new Scene(root));
+                        stage.initModality(Modality.APPLICATION_MODAL);
+                        stage.setTitle("Editar Curso");
+                        stage.showAndWait();
 
-                            Stage stage = new Stage();
-                            stage.setScene(new Scene(root));
-                            stage.initModality(Modality.APPLICATION_MODAL);
-                            stage.setTitle("Editar Curso");
-                            stage.showAndWait();
+                        aplicarFiltros();
 
-                            aplicarFiltros();
-
-                        } catch (IOException ex) {
-                            throw new RuntimeException(ex);
-                        }
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
                     }
                 });
 
@@ -167,6 +170,7 @@ public class PrincipalController {
                 btnVisualizar.setGraphic(iconVisualizar);
                 btnVisualizar.setStyle("-fx-background-color: #bae6fd; -fx-cursor: hand; -fx-padding: 2;");
 
+                // Ação de visualizar
                 btnVisualizar.setOnAction(e -> {
                     Curso curso = getTableView().getItems().get(getIndex());
                     if (curso != null) {
@@ -276,5 +280,13 @@ public class PrincipalController {
 
             return filtroPesquisa && filtroStatus;
         });
+    }
+
+    private void mostrarAlerta(String titulo, String mensagem) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensagem);
+        alert.showAndWait();
     }
 }

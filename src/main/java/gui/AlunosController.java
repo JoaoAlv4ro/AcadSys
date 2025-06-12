@@ -149,6 +149,10 @@ public class AlunosController {
 
                 btnEditar.setOnAction(e -> {
                     Aluno aluno = getTableView().getItems().get(getIndex());
+                    if(!curso.isAtivo()) {
+                        mostrarAlerta("Curso Inativo", "Não é possível editar Alunos em Cursos inativos! Caso precise editar algo do curso ative nos Status!");
+                        return;
+                    }
                     if (aluno != null) {
                         try {
                             FXMLLoader loader = new FXMLLoader(getClass().getResource("EditarAluno.fxml"));
@@ -266,7 +270,7 @@ public class AlunosController {
     @FXML
     public void abrirCadastrarAluno() {
         if (!curso.isAtivo()) {
-            mostrarAlerta("Curso Inativo", "Não é possível adicionar alunos a cursos inativos");
+            mostrarAlerta("Curso Inativo", "Não é possível adicionar alunos a cursos inativos!");
             return;
         }
         try {
