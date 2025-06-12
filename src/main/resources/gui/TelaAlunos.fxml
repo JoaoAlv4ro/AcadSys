@@ -29,7 +29,7 @@
     <HBox spacing="10">
       <HBox spacing="10">
          <children>
-             <TextField fx:id="txtPesquisaAluno" prefWidth="300" promptText="Digite o nome do Aluno" />
+             <TextField fx:id="txtPesquisaAluno" prefWidth="300" promptText="Digite o nome ou CPF do Aluno" />
              <ChoiceBox fx:id="choiceFiltroStatus" prefWidth="120" />
          </children>
       </HBox>

@@ -238,8 +238,7 @@ public class AlunosController {
         });
 
         listaFiltrada.setPredicate(aluno -> {
-            boolean correspondeTexto = aluno.getNome().toLowerCase().contains(texto);
-
+            boolean correspondeTexto = aluno.getNome().toLowerCase().contains(texto) || aluno.getCpf().toLowerCase().contains(texto);
             boolean correspondeStatus = switch (status) {
                 case "Ativos" -> aluno.isAtivo();
                 case "Inativos" -> !aluno.isAtivo();
