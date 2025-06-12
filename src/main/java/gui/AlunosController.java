@@ -150,7 +150,7 @@ public class AlunosController {
                 btnEditar.setOnAction(e -> {
                     Aluno aluno = getTableView().getItems().get(getIndex());
                     if(!curso.isAtivo()) {
-                        mostrarAlerta("Curso Inativo", "Não é possível editar Alunos em Cursos inativos! Caso precise editar algo do curso ative nos Status!");
+                        mostrarAlerta("Curso Inativo", "Não é possível editar Alunos em Cursos inativos! \nCaso precise editar algo do curso ative nos Status!");
                         return;
                     }
                     if (aluno != null) {
@@ -269,14 +269,14 @@ public class AlunosController {
     @FXML
     public void abrirCadastrarAluno() {
         if (!curso.isAtivo()) {
-            mostrarAlerta("Curso Inativo", "Não é possível adicionar alunos a cursos inativos!");
+            mostrarAlerta("Curso Inativo", "Não é possível adicionar alunos a cursos inativos! \nCaso precise editar algo do curso ative nos Status!\"");
             return;
         }
         AlunoDAO dao = new AlunoDAO();
         int alunosDoCurso = dao.getAlunosByCurso(curso.getIdCurso()).size();
 
         if (alunosDoCurso >= curso.getLimiteAlunos()) {
-            mostrarAlerta("Limite Atingido", "Não é possível cadastrar mais alunos neste curso.\nO limite é de " + curso.getLimiteAlunos() + " aluno(s). Caso queira cadastrar novos alunos aumente o limite!");
+            mostrarAlerta("Limite Atingido", "Não é possível cadastrar mais alunos neste curso.\nO limite é de " + curso.getLimiteAlunos() + " aluno(s). \nCaso queira cadastrar novos alunos aumente o limite!");
             return;
         }
         try {

@@ -114,7 +114,7 @@ public class PrincipalController {
                 btnEditar.setOnAction(e -> {
                     Curso curso = getTableView().getItems().get(getIndex());
                     if (!curso.isAtivo()) {
-                        mostrarAlerta("Curso Inativo", "Não é possível editar cursos inativos! Caso precise editar algo do curso ative nos Status!");
+                        mostrarAlerta("Curso Inativo", "Não é possível editar cursos inativos! \nCaso precise editar algo do curso ative nos Status!");
                         return;
                     }
                     try {
