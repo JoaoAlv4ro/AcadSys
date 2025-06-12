@@ -127,7 +127,11 @@ public class AlunosController {
 
         // Configura colunas
         colNome.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNome()));
-        colCpf.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCpf()));
+        colCpf.setCellValueFactory(data -> {
+            String cpfBruto = data.getValue().getCpf();
+            String cpfFormatado = formatarCpf(cpfBruto);
+            return new SimpleStringProperty(cpfFormatado);
+        });
         colEmail.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getEmail()));
         colNascimento.setCellValueFactory(data ->
                 new SimpleStringProperty(data.getValue().getDataNascimento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))
@@ -238,7 +242,7 @@ public class AlunosController {
         });
 
         listaFiltrada.setPredicate(aluno -> {
-            boolean correspondeTexto = aluno.getNome().toLowerCase().contains(texto) || aluno.getCpf().toLowerCase().contains(texto);
+            boolean correspondeTexto = aluno.getNome().toLowerCase().contains(texto) || aluno.getCpf().toLowerCase().startsWith(texto);
             boolean correspondeStatus = switch (status) {
                 case "Ativos" -> aluno.isAtivo();
                 case "Inativos" -> !aluno.isAtivo();
@@ -361,5 +365,14 @@ public class AlunosController {
         alert.setHeaderText(null);
         alert.setContentText(mensagem);
         alert.showAndWait();
+    }
+
+    private String formatarCpf(String cpf) {
+        if (cpf == null || cpf.length() != 11) return cpf;
+
+        return cpf.substring(0, 3) + "." +
+                cpf.substring(3, 6) + "." +
+                cpf.substring(6, 9) + "-" +
+                cpf.substring(9, 11);
     }
 }

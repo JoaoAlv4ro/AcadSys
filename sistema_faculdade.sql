@@ -32,13 +32,13 @@ VALUES
 
 INSERT INTO Aluno (cpf, nome_Aluno, email, data_nascimento, id_Curso)
 VALUES 
-('12345678901', 'Ana Beatriz Silva', 'ana.silva@email.com', '2000-05-10', 1),
-('23456789012', 'Bruno Carvalho', 'bruno.c@email.com', '1999-03-22', 2),
-('34567890123', 'Carlos Mendes', 'carlos.m@email.com', '2001-07-14', 3),
-('45678901234', 'Daniela Souza', 'daniela.s@email.com', '2000-12-01', 4),
-('56789012345', 'Eduardo Lima', 'eduardo.l@email.com', '1998-11-30', 5),
-('67890123456', 'Fernanda Rocha', 'fernanda.r@email.com', '2002-02-15', 1),
-('78901234567', 'Gustavo Martins', 'gustavo.m@email.com', '2001-08-19', 2),
-('89012345678', 'Helena Duarte', 'helena.d@email.com', '1999-09-25', 3),
-('90123456789', 'Igor Nunes', 'igor.n@email.com', '2000-01-05', 4),
-('01234567890', 'Juliana Alves', 'juliana.a@email.com', '2002-06-30', 5);
+('98765432100', 'Ana Beatriz Silva', 'ana.silva@email.com', '2000-05-10', 1),
+('12345678909', 'Bruno Carvalho', 'bruno.c@email.com', '1999-03-22', 2),
+('11144477735', 'Carlos Mendes', 'carlos.m@email.com', '2001-07-14', 3),
+('22233344405', 'Daniela Souza', 'daniela.s@email.com', '2000-12-01', 4),
+('33322211196', 'Eduardo Lima', 'eduardo.l@email.com', '1998-11-30', 5),
+('44455566670', 'Fernanda Rocha', 'fernanda.r@email.com', '2002-02-15', 1),
+('55566677788', 'Gustavo Martins', 'gustavo.m@email.com', '2001-08-19', 2),
+('66677788804', 'Helena Duarte', 'helena.d@email.com', '1999-09-25', 3),
+('77788899940', 'Igor Nunes', 'igor.n@email.com', '2000-01-05', 4),
+('88899900030', 'Juliana Alves', 'juliana.a@email.com', '2002-06-30', 5);
