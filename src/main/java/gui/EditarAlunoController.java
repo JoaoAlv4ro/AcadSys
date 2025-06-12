@@ -7,6 +7,7 @@ import javafx.stage.Stage;
 import model.Aluno;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class EditarAlunoController {
 
@@ -33,15 +34,13 @@ public class EditarAlunoController {
 
     @FXML
     private void atualizarAluno() {
+        if (!validarAluno()) {
+            return;
+        }
         try {
             String nome = txtNome.getText().trim();
             String email = txtEmail.getText().trim();
             LocalDate nascimento = dpNascimento.getValue();
-
-            if (nome.isEmpty() || email.isEmpty() || nascimento == null) {
-                mostrarAlerta("Campos obrigatórios", "Preencha todos os campos.");
-                return;
-            }
 
             aluno.setNome(nome);
             aluno.setEmail(email);
@@ -68,5 +67,41 @@ public class EditarAlunoController {
     private void fecharJanela() {
         Stage stage = (Stage) txtNome.getScene().getWindow();
         stage.close();
+    }
+
+    private boolean validarAluno() {
+        if (txtNome.getText().isEmpty() || txtEmail.getText().isEmpty() || dpNascimento.getValue() == null) {
+            mostrarAlerta("Campos obrigatórios", "Preencha todos os campos.");
+            return false;
+        }
+
+        // Valida Nome (mínimo 3 caracteres)
+        if (txtNome.getText().trim().length() < 3) {
+            mostrarAlerta("Nome inválido", "O nome deve ter no mínimo 3 caracteres");
+            return false;
+        }
+
+        // Valida Email (formato básico)
+        if (!txtEmail.getText().matches("^[\\w.-]+@[\\w.-]+\\.[a-z]{2,}$")) {
+            mostrarAlerta("Email inválido", "Informe um email válido (exemplo: usuario@dominio.com)");
+            return false;
+        }
+
+        // Valida Data de Nascimento (mínimo 16 anos)
+        if (dpNascimento.getValue() == null) {
+            mostrarAlerta("Data inválida", "Informe a data de nascimento");
+            return false;
+        }
+
+        LocalDate hoje = LocalDate.now();
+        LocalDate nascimento = dpNascimento.getValue();
+        long idade = ChronoUnit.YEARS.between(nascimento, hoje);
+
+        if (idade < 16) {
+            mostrarAlerta("Idade inválida", "O aluno deve ter no mínimo 16 anos");
+            return false;
+        }
+
+        return true;
     }
 }
