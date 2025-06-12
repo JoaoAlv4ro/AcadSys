@@ -273,6 +273,13 @@ public class AlunosController {
             mostrarAlerta("Curso Inativo", "Não é possível adicionar alunos a cursos inativos!");
             return;
         }
+        AlunoDAO dao = new AlunoDAO();
+        int alunosDoCurso = dao.getAlunosByCurso(curso.getIdCurso()).size();
+
+        if (alunosDoCurso >= curso.getLimiteAlunos()) {
+            mostrarAlerta("Limite Atingido", "Não é possível cadastrar mais alunos neste curso.\nO limite é de " + curso.getLimiteAlunos() + " aluno(s). Caso queira cadastrar novos alunos aumente o limite!");
+            return;
+        }
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("CadastrarAluno.fxml"));
             Parent root = loader.load();
