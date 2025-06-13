@@ -126,25 +126,28 @@ public class AlunoDAO {
         }
     }
 
-    // Listar apenas ativos
-    public List<Aluno> getAlunosAtivos() {
-        String sql = "SELECT * FROM Aluno WHERE ativo_Aluno = true";
+    // Listar apenas ativos por Curso
+    public List<Aluno> getAlunosAtivosByCurso(int cursoRequisitado) {
+        String sql = "SELECT * FROM Aluno WHERE ativo_Aluno = true AND id_Curso = ?";
         List<Aluno> alunos = new ArrayList<>();
 
         try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            while(rs.next()) {
-                Aluno aluno = new Aluno();
-                aluno.setId(rs.getInt("id_Aluno"));
-                aluno.setCpf(rs.getString("cpf"));
-                aluno.setNome(rs.getString("nome_Aluno"));
-                aluno.setEmail(rs.getString("email"));
-                aluno.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
-                aluno.setAtivo(rs.getBoolean("ativo_Aluno"));
-                aluno.setIdCurso(rs.getInt("id_Curso"));
-                alunos.add(aluno);
+            stmt.setInt(1, cursoRequisitado);
+
+            try (ResultSet rs = stmt.executeQuery()){
+                while(rs.next()) {
+                    Aluno aluno = new Aluno();
+                    aluno.setId(rs.getInt("id_Aluno"));
+                    aluno.setCpf(rs.getString("cpf"));
+                    aluno.setNome(rs.getString("nome_Aluno"));
+                    aluno.setEmail(rs.getString("email"));
+                    aluno.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
+                    aluno.setAtivo(rs.getBoolean("ativo_Aluno"));
+                    aluno.setIdCurso(rs.getInt("id_Curso"));
+                    alunos.add(aluno);
+                }
             }
 
         } catch (SQLException e) {
@@ -153,7 +156,6 @@ public class AlunoDAO {
 
         return alunos;
     }
-
 
     // Listar apenas Inativos
     public List<Aluno> getAlunosInativos() {
@@ -181,7 +183,6 @@ public class AlunoDAO {
 
         return alunos;
     }
-
 
     // Listar todos
     public List<Aluno> getAllAlunos() {
