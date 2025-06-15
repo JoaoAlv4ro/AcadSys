@@ -15,6 +15,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -22,10 +25,19 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Curso;
 
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 
 public class PrincipalController {
+    @FXML private Label lblAcadSys;
+    @FXML private Button btnAjuda;
+
     @FXML private TableView<Curso> tabelaCursos;
     @FXML private TableColumn<Curso, Boolean> colStatus;
     @FXML private TableColumn<Curso, String> colNome;
@@ -46,6 +58,18 @@ public class PrincipalController {
 
     @FXML
     public void initialize() {
+        ImageView iconAcadSys = new ImageView(new Image(getClass().getResourceAsStream("/icons/horse.png")));
+        iconAcadSys.setFitWidth(28);
+        iconAcadSys.setFitHeight(28);
+        lblAcadSys.setGraphic(iconAcadSys);
+        lblAcadSys.setContentDisplay(ContentDisplay.LEFT);
+
+        ImageView iconAjuda = new ImageView(new Image(getClass().getResourceAsStream("/icons/question.png")));
+        iconAjuda.setFitWidth(20);
+        iconAjuda.setFitHeight(20);
+        btnAjuda.setGraphic(iconAjuda);
+        btnAjuda.setContentDisplay(ContentDisplay.LEFT);
+
         // Configura as colunas
         colStatus.setCellFactory(column -> new TableCell<>() {
             private final Label statusLabel = new Label();
@@ -89,7 +113,6 @@ public class PrincipalController {
                 }
             }
         });
-
 
         colNome.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNomeCurso()));
         colCargaHoraria.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getCargaHoraria()).asObject());
@@ -290,5 +313,29 @@ public class PrincipalController {
         alert.setHeaderText(null);
         alert.setContentText(mensagem);
         alert.showAndWait();
+    }
+
+    @FXML
+    private void abrirManual() {
+        try {
+            // Verifica se o Desktop é suportado
+            if (!Desktop.isDesktopSupported()) {
+                mostrarAlerta("Erro", "A funcionalidade de abrir arquivos não é suportada neste sistema.");
+                return;
+            }
+
+            // Tenta abrir o PDF (ajuste o caminho conforme necessário)
+            File manualFile = new File("manual/ManualDoUsuario.pdf");
+            if (manualFile.exists()) {
+                Desktop.getDesktop().open(manualFile);
+            } else {
+                // Se não encontrar localmente, tenta abrir online
+                URI uri = new URI("https://file.notion.so/f/f/48c61061-51c6-42b8-9435-55e351bd0d9c/af05b1b1-ff84-4210-aeab-7d33e09498b0/Manual_do_Usurio_-_AcadSys.pdf?table=block&id=1fab359e-e444-8017-8f8d-d4901fa7590a&spaceId=48c61061-51c6-42b8-9435-55e351bd0d9c&expirationTimestamp=1750053600000&signature=_OS43I41Ul08rTMzNGsWkF8T5LRi-g2fwDCaua2xavk&downloadName=Manual+do+Usu%C3%A1rio+-+AcadSys.pdf");
+                Desktop.getDesktop().browse(uri);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarAlerta("Erro", "Não foi possível abrir o manual: " + e.getMessage());
+        }
     }
 }

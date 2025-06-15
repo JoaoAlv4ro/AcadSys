@@ -6,57 +6,81 @@
 <?import javafx.scene.text.*?>
 
 <VBox prefHeight="511.0" prefWidth="758.0" spacing="10.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.PrincipalController">
-
-    <HBox spacing="10">
-      <HBox spacing="10">
-         <children>
-            <TextField fx:id="txtPesquisaCurso" prefWidth="300" promptText="Digite o nome do curso" />
-             <ChoiceBox fx:id="choiceFiltroStatus" prefWidth="120" />
-         </children>
-      </HBox>
-        <Region fx:id="espaco" HBox.hgrow="ALWAYS" />
-      <HBox spacing="10">
-         <children>
-            <Button fx:id="btnCadastrarCurso" onAction="#abrirCadastrarCurso" style="-fx-cursor: hand; -fx-background-color: #3b82f6; -fx-font-weight: bold; -fx-text-fill: white;" text="Cadastrar Curso" />
-         </children>
-      </HBox>
-    </HBox>
-
-
-    <HBox>
-        <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Cursos Cadastrados">
+   <HBox nodeOrientation="LEFT_TO_RIGHT" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #064e3b; -fx-text-fill: white;">
+      <children>
+         <Label fx:id="lblAcadSys" contentDisplay="CENTER" text="AcadSys" textFill="WHITE">
             <font>
-                <Font name="Arial" size="16.0" />
+               <Font name="Arial Bold" size="24.0" />
             </font>
-        </Label>
-        <Region fx:id="espaco" HBox.hgrow="ALWAYS" />
-        <HBox spacing="15" alignment="CENTER_LEFT">
+         </Label>
+          <Region fx:id="espaco" HBox.hgrow="ALWAYS" />
+         <Button fx:id="btnAjuda" onAction="#abrirManual" style="-fx-cursor: hand; -fx-background-color: #f0fdf4; -fx-font-weight: semi-bold;" text="Ajuda" />
+      </children>
+      <VBox.margin>
+         <Insets />
+      </VBox.margin>
+      <padding>
+         <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+      </padding>
+   </HBox>
+   <VBox prefHeight="511.0" prefWidth="758.0" spacing="10.0">
+      <children>
+         <HBox spacing="10">
             <children>
-                <HBox spacing="5" alignment="CENTER_LEFT">
-                    <Label style="-fx-min-width: 12; -fx-min-height: 12; -fx-max-width: 12; -fx-max-height: 12; -fx-background-color: #65a30d; -fx-background-radius: 8; -fx-border-radius: 8;" />
-                    <Label text="Ativo" />
-                </HBox>
-                <HBox spacing="5" alignment="CENTER_LEFT">
-                    <Label style="-fx-min-width: 12; -fx-min-height: 12; -fx-max-width: 12; -fx-max-height: 12; -fx-background-color: #dc2626; -fx-background-radius: 2; -fx-border-radius: 2;" />
-                    <Label text="Inativo" />
-                </HBox>
+               <HBox spacing="10">
+                  <children>
+                     <TextField fx:id="txtPesquisaCurso" prefWidth="300" promptText="Digite o nome do curso" />
+                     <ChoiceBox fx:id="choiceFiltroStatus" prefWidth="120" />
+                  </children>
+               </HBox>
+               <Region fx:id="espaco" HBox.hgrow="ALWAYS" />
+               <HBox spacing="10">
+                  <children>
+                     <Button fx:id="btnCadastrarCurso" onAction="#abrirCadastrarCurso" style="-fx-cursor: hand; -fx-background-color: #3b82f6; -fx-font-weight: bold; -fx-text-fill: white;" text="Cadastrar Curso" />
+                  </children>
+               </HBox>
             </children>
-        </HBox>
-    </HBox>
-    <TableView fx:id="tabelaCursos">
-        <columns>
-            <TableColumn fx:id="colStatus" text="Status" />
-            <TableColumn fx:id="colNome" prefWidth="365" style="-fx-font-weight: bold;" text="Nome do Curso" />
-            <TableColumn fx:id="colCargaHoraria" prefWidth="100" text="Carga Horária" />
-            <TableColumn fx:id="colLimiteAlunos" text="Limite" />
-            <TableColumn fx:id="colAcoes" text="Ações" />
-        </columns>
-    </TableView>
-
-    <Label fx:id="lblTotalCursos" text="Total de cadastros: " />
-
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-    </padding>
+         </HBox>
+         <HBox>
+            <children>
+               <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Cursos Cadastrados">
+                  <font>
+                     <Font name="Arial" size="16.0" />
+                  </font>
+               </Label>
+               <Region fx:id="espaco1" HBox.hgrow="ALWAYS" />
+               <HBox alignment="CENTER_LEFT" spacing="15">
+                  <children>
+                     <HBox alignment="CENTER_LEFT" spacing="5">
+                        <children>
+                           <Label style="-fx-min-width: 12; -fx-min-height: 12; -fx-max-width: 12; -fx-max-height: 12; -fx-background-color: #65a30d; -fx-background-radius: 8; -fx-border-radius: 8;" />
+                           <Label text="Ativo" />
+                        </children>
+                     </HBox>
+                     <HBox alignment="CENTER_LEFT" spacing="5">
+                        <children>
+                           <Label style="-fx-min-width: 12; -fx-min-height: 12; -fx-max-width: 12; -fx-max-height: 12; -fx-background-color: #dc2626; -fx-background-radius: 2; -fx-border-radius: 2;" />
+                           <Label text="Inativo" />
+                        </children>
+                     </HBox>
+                  </children>
+               </HBox>
+            </children>
+         </HBox>
+         <TableView fx:id="tabelaCursos">
+            <columns>
+               <TableColumn fx:id="colStatus" text="Status" />
+               <TableColumn fx:id="colNome" prefWidth="365" style="-fx-font-weight: bold;" text="Nome do Curso" />
+               <TableColumn fx:id="colCargaHoraria" prefWidth="100" text="Carga Horária" />
+               <TableColumn fx:id="colLimiteAlunos" text="Limite" />
+               <TableColumn fx:id="colAcoes" text="Ações" />
+            </columns>
+         </TableView>
+         <Label fx:id="lblTotalCursos" text="Total de cadastros: " />
+      </children>
+      <padding>
+         <Insets bottom="20.0" left="20.0" right="20.0" top="5.0" />
+      </padding>
+   </VBox>
 
 </VBox>

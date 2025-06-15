@@ -10,6 +10,7 @@ module org.crud_faculdade {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires java.sql;
+    requires java.desktop;
 
     opens gui to javafx.fxml;
     exports gui;
