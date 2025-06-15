@@ -1,6 +1,7 @@
 package gui;
 
 import dao.AlunoDAO;
+import dao.CursoDAO;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -57,6 +58,7 @@ public class AlunosController {
         lblNomeCurso.setText(curso.getNomeCurso());
         lblCargaHoraria.setText(String.valueOf(curso.getCargaHoraria()));
         lblLimiteAlunos.setText(String.valueOf(curso.getLimiteAlunos()));
+        lblLimiteAlunos.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-cursor: hand; -fx-underline: true;");
         boxStatusCurso.getChildren().clear();
 
         Label bolinha = new Label();
@@ -73,6 +75,7 @@ public class AlunosController {
         boxStatusCurso.getChildren().addAll(bolinha, texto);
         boxStatusCurso.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
+        atualizarStatusCurso();
         atualizarTabela();
     }
 
@@ -227,6 +230,68 @@ public class AlunosController {
         btnCadastrarAluno.setGraphic(iconMaisCurso);
         btnCadastrarAluno.setContentDisplay(ContentDisplay.LEFT);
 
+        lblLimiteAlunos.setOnMouseClicked(e -> {
+            if (!curso.isAtivo()) {
+                mostrarAlerta("Curso Inativo", "Não é possível editar o limite de alunos em cursos inativos!");
+                return;
+            }
+
+            TextInputDialog dialog = new TextInputDialog(String.valueOf(curso.getLimiteAlunos()));
+            dialog.setTitle("Editar Limite de Alunos");
+            dialog.setHeaderText("Digite o novo limite de alunos");
+            dialog.setContentText("Limite:");
+
+            dialog.showAndWait().ifPresent(novoLimite -> {
+                try {
+                    int limite = Integer.parseInt(novoLimite);
+                    if (limite < 1) {
+                        mostrarAlerta("Valor inválido", "O limite deve ser maior que 0");
+                        return;
+                    }
+
+                    // Verifica se o novo limite é menor que o número de alunos ativos
+                    int alunosAtivos = new AlunoDAO().getAlunosAtivosByCurso(curso.getIdCurso()).size();
+                    if (limite < alunosAtivos) {
+                        mostrarAlerta("Limite inválido",
+                                "O novo limite (" + limite + ") é menor que o número de alunos ativos (" + alunosAtivos + ")");
+                        return;
+                    }
+
+                    // Atualiza no banco de dados
+                    curso.setLimiteAlunos(limite);
+                    new CursoDAO().updateCurso(curso);
+
+                    // Atualiza a exibição
+                    lblLimiteAlunos.setText(String.valueOf(limite));
+
+                } catch (NumberFormatException ex) {
+                    mostrarAlerta("Valor inválido", "Digite um número inteiro válido");
+                }
+            });
+        });
+
+        boxStatusCurso.setOnMouseClicked(e -> {
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Alterar Status do Curso");
+            confirm.setHeaderText("Deseja " + (curso.isAtivo() ? "desativar" : "ativar") + " este curso?");
+
+            confirm.showAndWait().ifPresent(resposta -> {
+                if (resposta == ButtonType.OK) {
+                    CursoDAO dao = new CursoDAO();
+                    if (curso.isAtivo()) {
+                        dao.disableCurso(curso.getIdCurso());
+                        curso.setAtivo(false);
+                    } else {
+                        dao.enableCurso(curso.getIdCurso());
+                        curso.setAtivo(true);
+                    }
+
+                    // Atualiza a exibição
+                    atualizarStatusCurso();
+                }
+            });
+        });
+
         atualizarTabela();
         aplicarFiltros();
     }
@@ -374,5 +439,25 @@ public class AlunosController {
                 cpf.substring(3, 6) + "." +
                 cpf.substring(6, 9) + "-" +
                 cpf.substring(9, 11);
+    }
+
+    private void atualizarStatusCurso() {
+        boxStatusCurso.getChildren().clear();
+
+        Label bolinha = new Label();
+        bolinha.setMinSize(16, 16);
+        bolinha.setMaxSize(16, 16);
+        bolinha.setStyle(
+                "-fx-background-color: " + (curso.isAtivo() ? "#65a30d" : "#dc2626") + ";" +
+                        "-fx-background-radius: " + (curso.isAtivo() ? "8" : "2") + ";" +
+                        "-fx-border-radius: " + (curso.isAtivo() ? "8" : "2") + ";" +
+                        "-fx-cursor: hand;"
+        );
+
+        Label texto = new Label(curso.isAtivo() ? "Ativo" : "Inativo");
+        texto.setStyle("-fx-cursor: hand;");
+
+        boxStatusCurso.getChildren().addAll(bolinha, texto);
+        boxStatusCurso.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
     }
 }

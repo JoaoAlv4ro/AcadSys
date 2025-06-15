@@ -185,7 +185,9 @@ public class PrincipalController {
                             stage.setScene(new Scene(root));
                             stage.setTitle("Alunos do Curso: " + curso.getNomeCurso());
                             stage.initModality(Modality.APPLICATION_MODAL);
-                            stage.show();
+                            stage.showAndWait();
+                            atualizarTabela();
+                            aplicarFiltros();
 
                         } catch (IOException ex) {
                             ex.printStackTrace();
