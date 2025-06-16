@@ -96,36 +96,6 @@ public class AlunoDAO {
         }
     }
 
-    // Consultar aluno por cpf
-    public Aluno getAlunoByCPF(int cpfRequisitado) {
-        String sql = "SELECT * FROM Aluno WHERE cpf = ?";
-
-        try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, cpfRequisitado);
-
-            try (ResultSet rs = stmt.executeQuery()){
-                if (rs.next()) {
-                    Aluno aluno = new Aluno();
-                    aluno.setId(rs.getInt("id_Aluno"));
-                    aluno.setCpf(rs.getString("cpf"));
-                    aluno.setNome(rs.getString("nome_Aluno"));
-                    aluno.setEmail(rs.getString("email"));
-                    aluno.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
-                    aluno.setAtivo(rs.getBoolean("ativo_Aluno"));
-                    aluno.setIdCurso(rs.getInt("id_Curso"));
-                    return aluno;
-                } else {
-                    return null;
-                }
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao buscar Aluno!", e);
-        }
-    }
-
     // Listar apenas ativos por Curso
     public List<Aluno> getAlunosAtivosByCurso(int cursoRequisitado) {
         String sql = "SELECT * FROM Aluno WHERE ativo_Aluno = true AND id_Curso = ?";
@@ -154,59 +124,6 @@ public class AlunoDAO {
             throw new RuntimeException("Erro ao listar Alunos ativos!", e);
         }
 
-        return alunos;
-    }
-
-    // Listar apenas Inativos
-    public List<Aluno> getAlunosInativos() {
-        String sql = "SELECT * FROM Aluno WHERE ativo_Aluno = false";
-        List<Aluno> alunos = new ArrayList<>();
-
-        try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-
-            while(rs.next()) {
-                Aluno aluno = new Aluno();
-                aluno.setId(rs.getInt("id_Aluno"));
-                aluno.setCpf(rs.getString("cpf"));
-                aluno.setNome(rs.getString("nome_Aluno"));
-                aluno.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
-                aluno.setAtivo(rs.getBoolean("ativo_Aluno"));
-                aluno.setIdCurso(rs.getInt("id_Curso"));
-                alunos.add(aluno);
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao listar Alunos inativos!", e);
-        }
-
-        return alunos;
-    }
-
-    // Listar todos
-    public List<Aluno> getAllAlunos() {
-        String sql = "SELECT * FROM Aluno";
-        List<Aluno> alunos = new ArrayList<>();
-
-        try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-
-            while(rs.next()) {
-                Aluno aluno = new Aluno();
-                aluno.setId(rs.getInt("id_Aluno"));
-                aluno.setCpf(rs.getString("cpf"));
-                aluno.setNome(rs.getString("nome_Aluno"));
-                aluno.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
-                aluno.setAtivo(rs.getBoolean("ativo_Aluno"));
-                aluno.setIdCurso(rs.getInt("id_Curso"));
-                alunos.add(aluno);
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao listar Alunos!", e);
-        }
         return alunos;
     }
 

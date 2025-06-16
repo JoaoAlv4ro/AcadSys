@@ -96,34 +96,6 @@ public class CursoDAO {
         }
     }
 
-    // Consultar curso por id
-    public Curso getCursoByID(int idRequisitado) {
-        String sql = "SELECT * FROM Curso WHERE id_Curso = ?";
-
-        try (Connection conn = ConnectionFactory.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, idRequisitado);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    Curso cursoEncontrado = new Curso();
-                    cursoEncontrado.setIdCurso(rs.getInt("id_Curso"));
-                    cursoEncontrado.setNomeCurso(rs.getString("nome_Curso"));
-                    cursoEncontrado.setCargaHoraria(rs.getInt("carga_horaria"));
-                    cursoEncontrado.setLimiteAlunos(rs.getInt("limite_alunos"));
-                    cursoEncontrado.setAtivo(rs.getBoolean("ativo_Curso"));
-                    return cursoEncontrado;
-                } else {
-                    return null;
-                }
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao buscar Cursos!", e);
-        }
-    }
-
     // Listar todos os cursos
     public List<Curso> getAllCursos() {
         String sql = "SELECT * FROM Curso";
@@ -144,31 +116,6 @@ public class CursoDAO {
             }
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao listar Cursos",e);
-        }
-        return cursos;
-    }
-
-    // Listar apenas ativos
-    public List<Curso> getCursosAtivos() {
-        String sql = "SELECT * FROM Curso WHERE ativo_Curso = true";
-        List<Curso> cursos = new ArrayList<>();
-
-        try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()){
-
-            while (rs.next()) {
-                Curso curso = new Curso();
-                curso.setIdCurso(rs.getInt("id_Curso"));
-                curso.setNomeCurso(rs.getString("nome_Curso"));
-                curso.setCargaHoraria(rs.getInt("carga_horaria"));
-                curso.setLimiteAlunos(rs.getInt("limite_alunos"));
-                curso.setAtivo(rs.getBoolean("ativo_Curso"));
-                cursos.add(curso);
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao encontrar Cursos ativos!", e);
         }
         return cursos;
     }

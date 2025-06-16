@@ -9,7 +9,6 @@ public class Curso {
     private int cargaHoraria;
     private int limiteAlunos;
     private boolean ativo;
-    private List<Aluno> alunos;
 
     // Construtor
     public Curso() {}
@@ -19,7 +18,6 @@ public class Curso {
         this.cargaHoraria = cargaHoraria;
         this.limiteAlunos = limiteAlunos;
         this.ativo = ativo;
-        this.alunos = new ArrayList<>();
     }
 
 
@@ -62,13 +60,5 @@ public class Curso {
 
     public void setAtivo(boolean ativo) {
         this.ativo = ativo;
-    }
-
-    public List<Aluno> getAlunos() {
-        return alunos;
-    }
-
-    public void setAlunos(List<Aluno> alunos) {
-        this.alunos = alunos;
     }
 }
